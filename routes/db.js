@@ -13,12 +13,12 @@ db.get('/', (req, res) => {
 });
 
 //GetRoute for retreiving specific note
-db.get('/:note_id', (req, res) => {
-  const noteId = req.params.note_id;
+db.get('/:id', (req, res) => {
+  const noteId = req.params.id;
   readFromFile('./db/db.json')
     .then((data) => JSON.parse(data))
     .then((json) => {
-      const result = json.filter((note) => note.note_id === noteId);
+      const result = json.filter((note) => note.id === noteId);
       return result.length > 0
         ? res.json(result)
         : res.json('No note with that ID')
@@ -26,13 +26,13 @@ db.get('/:note_id', (req, res) => {
 });
 
 //Delete a specific note
-db.delete('/:note_id', (req, res) => {
-  const noteId = req.params.note_id;
+db.delete('/:id', (req, res) => {
+  const noteId = req.params.id;
   readFromFile('./db/db.json')
     .then((data) => JSON.parse(data))
     .then((json) => {
       //creates a new array of all notes except for the one with a matching ID
-      const result = json.filter((note) => note.note_id !== noteId);
+      const result = json.filter((note) => note.id !== noteId);
       //saves the array to the db json
       writeToFile('./db/db.json', result);
       //Respond to the delete request
@@ -51,7 +51,7 @@ db.post('/', (req, res) => {
     const newNote = {
       title,
       text,
-      note_id: uuidv4()
+      id: uuidv4()
     };
 
     readAndAppend(newNote, './db/db.json');
